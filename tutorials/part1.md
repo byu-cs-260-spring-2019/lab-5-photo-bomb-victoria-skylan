@@ -1,11 +1,11 @@
 # Part 1: Vue Setup
 
 ```
-nvm use stable
 cd lab5
 ```
 
 **For lab5, substitute your lab5 directory.**
+
 
 Now run vue create:
 
@@ -17,7 +17,7 @@ It will ask you some questions:
 
 - _Generate project in current directory?_: **Y**
 
-- _Please pick a preset_: **Router + Vuex + ESLint**
+- _Please pick a preset_: **Router + Vuex + Linter/Formatter**
 
 If you are missing the above-named preset, then you did not save it when you
 worked on the [Learning the Vue CLI Lesson 1](https://github.com/BYU-CS-260-Winter-2019/learning-vue-cli/blob/master/tutorials/lesson1.md). Please choose **Manually
