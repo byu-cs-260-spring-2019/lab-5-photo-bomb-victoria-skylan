@@ -1,202 +1,36 @@
-# Part 4: Authentication -- Back End
+# Part 4: Authentication 
 
-Users need to register for an account and login. We'll create the back end
-portion of this here.
+Users need to register for an account and login. 
 
-We will use the same code from our activity on user authentication, with some
-small modifications. Please see that activity for explanations of this code.
+## Login.vue
 
-The primary change to this code is to extend our user model to include a real
-name. You'll notice a change to the schema and to the export statement.
-
-The second change is to use middleware that validates a user's account,
-even if the token is valid. For example, we may have issued a token for a login,
-but then deleted the account before the token expired. You can find this in
-the `verify` static method that is defined on the user schema.
-
-## users.js
-
-Create a file called `server/users.js` and put the following there:
+Create a file called `views/Login.vue` and put the following in the template section:
 
 ```
-const mongoose = require('mongoose');
-const bcrypt = require("bcrypt");
-const express = require("express");
-const router = express.Router();
-const auth = require("./auth.js");
-
-const SALT_WORK_FACTOR = 10;
-
-const userSchema = new mongoose.Schema({
-  username: String,
-  password: String,
-  name: String,
-  tokens: [],
-});
-
-userSchema.pre('save', async function(next) {
-  // only hash the password if it has been modified (or is new)
-  if (!this.isModified('password'))
-    return next();
-
-  try {
-    // generate a salt
-    const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
-
-    // hash the password along with our new salt
-    const hash = await bcrypt.hash(this.password, salt);
-
-    // override the plaintext password with the hashed one
-    this.password = hash;
-    next();
-  } catch (error) {
-    console.log(error);
-    next(error);
-  }
-});
-
-userSchema.methods.comparePassword = async function(password) {
-  try {
-    const isMatch = await bcrypt.compare(password, this.password);
-    return isMatch;
-  } catch (error) {
-    return false;
-  }
-};
-
-userSchema.methods.toJSON = function() {
-  var obj = this.toObject();
-  delete obj.password;
-  delete obj.tokens;
-  return obj;
-}
-
-userSchema.methods.addToken = function(token) {
-  this.tokens.push(token);
-}
-
-userSchema.methods.removeToken = function(token) {
-  this.tokens = this.tokens.filter(t => t != token);
-}
-
-userSchema.methods.removeOldTokens = function() {
-  this.tokens = auth.removeOldTokens(this.tokens);
-}
-
-// middleware to validate user account
-userSchema.statics.verify = async function(req, res, next) {
-  // look up user account
-  const user = await User.findOne({
-    _id: req.user_id
-  });
-  if (!user || !user.tokens.includes(req.token))
-    return res.clearCookie('token').status(403).send({
-      error: "Invalid user account."
-    });
-
-  req.user = user;
-
-  next();
-}
-
-const User = mongoose.model('User', userSchema);
-
-// create a new user
-router.post('/', async (req, res) => {
-  if (!req.body.username || !req.body.password || !req.body.name)
-    return res.status(400).send({
-      message: "Name, username, and password are required."
-    });
-
-  try {
-
-    //  check to see if username already exists
-    const existingUser = await User.findOne({
-      username: req.body.username
-    });
-    if (existingUser)
-      return res.status(403).send({
-        message: "That username already exists."
-      });
-
-    // create new user
-    const user = new User({
-      username: req.body.username,
-      password: req.body.password,
-      name: req.body.name
-    });
-    await user.save();
-    login(user, res);
-  } catch (error) {
-    console.log(error);
-    return res.sendStatus(500);
-  }
-});
-
-// login
-router.post('/login', async (req, res) => {
-  if (!req.body.username || !req.body.password)
-    return res.status(400).send({
-      message: "Username and password are required."
-    });
-
-  try {
-    //  lookup user record
-    const existingUser = await User.findOne({
-      username: req.body.username
-    });
-    if (!existingUser)
-      return res.status(403).send({
-        message: "The username or password is wrong."
-      });
-
-    // check password
-    if (!await existingUser.comparePassword(req.body.password))
-      return res.status(403).send({
-        message: "The username or password is wrong."
-      });
-
-    login(existingUser, res);
-
-  } catch (error) {
-    console.log(error);
-    return res.sendStatus(500);
-  }
-});
-
-async function login(user, res) {
-  let token = auth.generateToken({
-    id: user._id
-  }, "24h");
-
-  user.removeOldTokens();
-  user.addToken(token);
-  await user.save();
-
-  return res
-    .cookie("token", token, {
-      expires: new Date(Date.now() + 86400 * 1000)
-    })
-    .status(200).send(user);
-}
-
-// Logout
-router.delete("/", auth.verifyToken, User.verify, async (req, res) => {
-  req.user.removeToken(req.token);
-  await req.user.save();
-  res.clearCookie('token');
-  res.sendStatus(200);
-});
-
-// Get current user if logged in.
-router.get('/', auth.verifyToken, User.verify, async (req, res) => {
-  return res.send(req.user);
-});
-
-module.exports = {
-  model: User,
-  routes: router,
-}
+<template>
+  <div class="login">
+    <img src="../assets/dc_logo.jpg" width="300px">
+    <h3>DC Comics Rebirth - Covers</h3>
+    <input 
+      type="text" 
+      v-model="email" 
+      placeholder="Email address" 
+      class="input" 
+      required>
+    <br/>
+    <input 
+      type="password" 
+      v-model="password"
+      placeholder="Password" 
+      class="input" 
+      required>
+    <br/>
+    <button v-on:click="login" class="button">Enter</button>
+    <p><router-link to="/signup">
+      New Here? Create a new account
+    </router-link></p>
+  </div>
+</template>
 ```
 
 ## auth.js
