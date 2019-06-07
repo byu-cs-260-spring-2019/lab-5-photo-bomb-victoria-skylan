@@ -4,7 +4,7 @@ We need to setup a server for the back end of this project. In the top level of
 this project, install some packages we will need:
 
 ```
-npm install express firebase firebase/app firebase/firestore
+npm install express firebase
 ```
 
 We need to set up firebase as well
