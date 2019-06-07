@@ -1,10 +1,10 @@
 # Part 3: Server Setup
 
 We need to setup a server for the back end of this project. In the top level of
-this project, install express:
+this project, install some packages we will need:
 
 ```
-npm install express
+npm install express firebase firebase/app firebase/firestore
 ```
 
 We need to set up firebase as well
