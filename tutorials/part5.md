@@ -22,8 +22,8 @@ Create a new file called `src/views/Register.vue`. It should have a `template` s
       </div>
 
       <div class="pure-control-group">
-        <label for="username">Username</label>
-        <input v-model="username" type="text" placeholder="Username">
+        <label for="email">Email</label>
+        <input v-model="email" type="text" placeholder="Email">
       </div>
 
       <div class="pure-control-group">
@@ -52,7 +52,7 @@ export default {
   data() {
     return {
       name: '',
-      username: '',
+      email: '',
       password: '',
       error: '',
     }
@@ -62,7 +62,7 @@ export default {
       try {
         this.error = await this.$store.dispatch("register", {
           name: this.name,
-          username: this.username,
+          email: this.email,
           password: this.password
         });
         if (this.error === "")
@@ -102,24 +102,16 @@ form {
 </style>
 ```
 
-## Vuex
+## Firebase Authentication
 
-We will use Vuex to communicate with the
-server and store state. First, install axios:
-
+We will use Firebase Authentication to register new users accounts.  Add this line to `src/store.js`.
 ```
-npm install axios
-```
-
-Then, in `src/store.js` import axios:
-
-```
-import Vue from 'vue'
-import Vuex from 'vuex'
-import axios from 'axios';
+import Vuex from "vuex";
+import firebase from 'firebase';
 ```
 
-Then add the state for users and the
+
+In `src/store.js` add the state for users and the
 mutation and actions for registering
 a user:
 
@@ -136,20 +128,19 @@ export default new Vuex.Store({
   actions: {
     async register(context, data) {
       try {
-        let response = await axios.post("/api/users", data);
+        let response = await firebase.auth().createUserWithEmailAndPassword(data.email, data.password);
         context.commit('setUser', response.data);
         return "";
       } catch (error) {
-        return error.response.data.message;
+        return error.message;
       }
     }
   }
 })
 ```
 
-The `register` action uses `axios` to post to the server's REST API. If this succeeds, it commits the `setUser` mutation and returns an empty string.
-If an error occurs, it returns the
-error message from the API.
+The `register` action uses firebase authentication to create a new user with the email and password given. If this succeeds, it commits the `setUser` mutation and returns an empty string.
+If an error occurs, it returns the error message from the API.
 
 ## My Page
 
