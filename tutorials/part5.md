@@ -17,11 +17,6 @@ Create a new file called `src/views/Register.vue`. It should have a `template` s
       <p class="pure-form-message-inline">All fields are required.</p>
 
       <div class="pure-control-group">
-        <label for="name">Real Name</label>
-        <input v-model="name" type="text" placeholder="Real Name">
-      </div>
-
-      <div class="pure-control-group">
         <label for="email">Email</label>
         <input v-model="email" type="text" placeholder="Email">
       </div>
@@ -51,7 +46,6 @@ export default {
   name: 'register',
   data() {
     return {
-      name: '',
       email: '',
       password: '',
       error: '',
@@ -61,7 +55,6 @@ export default {
     async register() {
       try {
         this.error = await this.$store.dispatch("register", {
-          name: this.name,
           email: this.email,
           password: this.password
         });
@@ -151,7 +144,7 @@ now, create `src/views/MyPage.vue` with the following:
 <template>
 <div>
   <h1>My Page</h1>
-  <p v-if="user">Hello, {{user.name}}</p>
+  <p v-if="user">Hello, {{user.email}}</p>
 </div>
 </template>
 
