@@ -21,9 +21,6 @@ const functions = require('firebase-functions');
 const firebase = require('firebase-admin');
 const express = require('express');
 
-const firebaseApp = firebase.initializeApp(
-    functions.config().firebase
-);
 const app = express();
 
 var db = firebase.firestore();
@@ -50,5 +47,27 @@ module.exports = {
 
 This lets the webpack development server that is started by `npm run serve` proxy the requests for the API and send them to your node server.
 
+
+We are going to be initializing our firebase app slightly differently with this new structure.  In `src/main.js`, add the following. 
+```
+import store from "./store";
+import firebase from 'firebase';
+
+Vue.config.productionTip = false;
+
+var firebaseConfig = {
+  apiKey: "",
+  authDomain: "",
+  databaseURL: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: ""
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+```
+
+You will find the values you need to add in your Firebase console under the "Project Overview", then "Project Settings".  Go down to the section entitled "Your apps", click "Add App", click on the option for web, give you app a name and you should see the config values you can fill in in your `main.js` file.
 
 Go to [Part 4](/tutorials/part4.md).
