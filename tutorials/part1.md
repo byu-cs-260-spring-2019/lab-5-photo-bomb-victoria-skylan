@@ -1,6 +1,7 @@
 # Part 1: Vue Setup
 
 ```
+mv Lab-5 lab5
 cd lab5
 ```
 
