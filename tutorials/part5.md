@@ -204,12 +204,4 @@ Next, delete the `about` route and add two new routes:
 
 You should now be able to register a user. You can visit `localhost:8080/register` to see the Register component.
 
-![registration form](/screenshots/bad-registration.png)
-
-![registration form](/screenshots/bad-registration2.png)
-
-![registration form](/screenshots/registration.png)
-
-![mypage](/screenshots/mypage1.png)
-
 Go to [Part 6](/tutorials/part6.md).
