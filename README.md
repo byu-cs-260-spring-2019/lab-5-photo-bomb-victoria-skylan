@@ -1,7 +1,7 @@
 # Lab 5: Photo Bomb
 
 In this assignment, you will build an entire web application, using Vue CLI for
-the front end and Node, Express, and Mongo on the back end.
+the front end and Node, Express, and Firebase Firestore on the back end - including incorporating user authentication.
 
 ## Starting the Lab
 
