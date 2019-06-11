@@ -11,23 +11,11 @@ Once you "Accept the assignment" on GitHub Classroom, it will create a new repos
 
 ## Tutorial
 
-Use the [tutorials](/tutorials/README.md) to create the application. This will help you create an application for sharing photos, including user authentication,
-uploading photos to a user's account, seeing all the photos in a user's account,
-and showing all photos on the home page. Once you are done, the home page should
-look like this:
+Use the [tutorials](/tutorials/README.md) to create the application. This will help you create an application for creating a user account, logging in, and displaying the logged in users email
 
-![home page](/screenshots/homepage.png)
+## Additional Parts
 
-and a user's photo page should look like this:
-
-![photo page](/screenshots/mypage4.png)
-
-## Additional Functionality
-
-Once you complete these introductory tutorials, add the following functionality:
-
-- [Photo Page](/tutorials/part9.md)
-- [Comments](/tutorials/part10.md)
+Since we will not be doing Creative Project 5 - add something creative here.  At the minimum, create your own backend API by adding, editing, or removing something from your Firestore database.  Hint - you can store the user's email in your database if you'd like to store information about that person.
 
 ## Link to GitHub repository
 
@@ -44,6 +32,6 @@ rubric:
 
 | Item                                                                                         | Points |
 | -------------------------------------------------------------------------------------------- | ------ |
-| The material in the tutorial works. Add four photos of your own objects to demonstrate this. | 70     |
-| Photo page meets requirements                                                                | 10     |
-| Comments meet requirements                                                                   | 20     |
+| The material in the tutorial works.                                                          | 70     |
+| Additional Creative Portion (creating an API that hits the Firestore)                        | 30     |
+
