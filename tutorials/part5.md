@@ -18,7 +18,7 @@ Create a new file called `src/views/Register.vue`. It should have a `template` s
 
       <div class="pure-control-group">
         <label for="email">Email</label>
-        <input v-model="email" type="text" placeholder="Email">
+        <input v-model="email" type="email" placeholder="Email">
       </div>
 
       <div class="pure-control-group">
