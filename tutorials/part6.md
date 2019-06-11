@@ -252,5 +252,3 @@ Then add the route:
 You should now be able to login now. The cookie that is set will keep you logged
 in even if you refresh the page.
 
-
-Go to [Part 7](/tutorials/part7.md).
