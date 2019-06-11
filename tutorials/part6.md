@@ -242,10 +242,5 @@ Then add the route:
 You should now be able to login now. The cookie that is set will keep you logged
 in even if you refresh the page.
 
-![login](/screenshots/login.png)
-
-![my page](/screenshots/mypage2.png)
-
-![my page](/screenshots/mypage3.png)
 
 Go to [Part 7](/tutorials/part7.md).
