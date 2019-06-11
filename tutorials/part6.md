@@ -15,8 +15,8 @@ Create a new file called `src/views/Login.vue`. It should have a `template` sect
       <p class="pure-form-message-inline">All fields are required.</p>
 
       <div class="pure-control-group">
-        <label for="username">Username</label>
-        <input v-model="username" type="text" placeholder="Username">
+        <label for="username">Email</label>
+        <input v-model="email" type="text" placeholder="Email">
       </div>
 
       <div class="pure-control-group">
@@ -45,7 +45,7 @@ export default {
   name: 'login',
   data() {
     return {
-      username: '',
+      email: '',
       password: '',
       error: '',
     }
@@ -54,7 +54,7 @@ export default {
     async login() {
       try {
         this.error = await this.$store.dispatch("login", {
-          username: this.username,
+          email: this.email,
           password: this.password
         });
         if (this.error === "")
@@ -101,33 +101,32 @@ Start with a `login` action:
 ```
     async login(context, data) {
       try {
-        let response = await axios.post("/api/users/login", data);
-        context.commit('setUser', response.data);
+        let response = await firebase.auth().signInWithEmailAndPassword(data.email, data.password);
+        context.commit('setUser', response.user);
         return "";
       } catch (error) {
-        return error.response.data.message;
+        return error.message;
       }
     }
 ```
 
-This uses `axios` to call the REST API for logging in. We commit the user state
-if it is successful, otherwise return an error message.
+This uses `firebase authentication` to to login. We commit the user state if it is successful, otherwise return an error message.
 
 Next, add the `logout` action.
 
 ```
     async logout(context) {
       try {
-        await axios.delete("/api/users");
+        await firebase.auth().signOut();
         context.commit('setUser', null);
         return "";
       } catch (error) {
-        return error.response.data.message;
+        return error.message;
       }
     },
 ```
 
-This uses `axios` to call the REST API for logging out. We delete the state for
+This uses `firebase authentication` to logout. We delete the state for
 the logged in user if it is successful.
 
 Next, add the `getUser` action:
@@ -135,8 +134,8 @@ Next, add the `getUser` action:
 ```
     async getUser(context) {
       try {
-        let response = await axios.get("/api/users");
-        context.commit('setUser', response.data);
+        let response = await  firebase.auth().currentUser;
+        context.commit('setUser', response.user);
         return "";
       } catch (error) {
         return "";
@@ -144,8 +143,7 @@ Next, add the `getUser` action:
     }
 ```
 
-This uses `axios` to call the REST API for getting the current user, setting
-the state for this user if succssful.
+This uses `firebase authentication` to get the current user, setting the state for this user if succssful.
 
 You will note that much of this code is similar to our user authentication
 activity.
@@ -162,14 +160,13 @@ Modify the template in `src/views/mypage.vue`:
 <div>
   <div v-if="user" class="header">
     <div>
-      <h2>{{user.name}}</h2>
+      <h2>{{user.email}}</h2>
     </div>
     <div class="button">
-      <p><button @click=" logout" class="pure-button pure-button-primary">Logout</button></p>
+      <p><button @click="logout" class="pure-button pure-button-primary">Logout</button></p>
     </div>
   </div>
   <div v-else>
-    <p>If you would like to upload photos, please register for an account or login.</p>
     <router-link to="/register" class="pure-button">Register</router-link> or
     <router-link to="/login" class="pure-button">Login</router-link>
   </div>
@@ -177,7 +174,7 @@ Modify the template in `src/views/mypage.vue`:
 </template>
 ```
 
-This uses a `v-if` directive to display the user's name if they are logged in,
+This uses a `v-if` directive to display the user's email if they are logged in,
 plus a logout button. Otherwise, it displays directions for registration or
 login.
 
