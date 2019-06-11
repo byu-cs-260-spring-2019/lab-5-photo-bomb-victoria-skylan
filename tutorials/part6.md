@@ -145,8 +145,18 @@ Next, add the `getUser` action:
 
 This uses `firebase authentication` to get the current user, setting the state for this user if succssful.
 
-You will note that much of this code is similar to our user authentication
-activity.
+You will also need to add the following to the bottom of your `main.js`
+```
+firebase.auth().onAuthStateChanged(user => {
+  if(user){
+    store.commit('setUser',user);
+  }
+  else {
+    store.commit('setUser',null);
+  }
+});
+```
+Because of the way the firebase authentication system is defined, using the getUser function will not always return the correct user (and sometimes will return null).  By adding this to `main.js` it is in a sense "listening" to see if the status of the user changes and storing the current user via a commit action to our store.
 
 ## My Page
 
