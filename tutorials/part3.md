@@ -1,6 +1,6 @@
 # Part 3: Server Setup
 
-We need to setup a server for the back end of this project. In the top level of
+We willsetup a server for the back end of this project - we won't use it in this lab, but this is how you would add it in if wanted to add an API. In the top level of
 this project, install some packages we will need:
 
 ```
